@@ -1,18 +1,24 @@
 {
   "name": "with-static-export",
+  "version": "0.0.1",
   "dependencies": {
+    "axios": "^0.20.0",
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "next": "latest",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "serve": "11.2.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "sass": "^1.26.10"
   },
   "scripts": {
     "dev": "next",
-    "build": "next build",
-    "preexport": "npm run build",
-    "export": "next export",
-    "prestart": "npm run export",
-    "start": "serve out"
+    "export": "next build && next export",
+    "start": "NODE_ENV=production node ./server.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "address": "^1.1.2",
+    "friendly-errors-webpack-plugin": "^1.7.0"
+  }
 }

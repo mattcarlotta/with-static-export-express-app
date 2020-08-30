@@ -1,34 +1,35 @@
-import Head from 'next/head'
-
-import Post from '../components/post'
+import Head from "next/head";
+import axios from "axios";
+import Posts from "../components/Posts";
+import Error from "../components/Error";
 
 export async function getStaticProps() {
-  // fetch list of posts
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts?_page=1'
-  )
-  const postList = await response.json()
+  let posts = [];
+  let error = "";
+  try {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts?_page=1"
+    );
+    posts = response.data;
+  } catch (err) {
+    error = err.toString();
+  }
+
   return {
     props: {
-      postList,
+      posts,
+      error,
     },
-  }
+  };
 }
 
-export default function IndexPage({ postList }) {
-  return (
-    <main>
-      <Head>
-        <title>Home page</title>
-      </Head>
+const IndexPage = ({ error, posts }) => (
+  <main>
+    <Head>
+      <title>Posts - Home</title>
+    </Head>
+    {!error ? <Posts posts={posts} /> : <Error error={error} />}
+  </main>
+);
 
-      <h1>List of posts</h1>
-
-      <section>
-        {postList.map((post) => (
-          <Post {...post} key={post.id} />
-        ))}
-      </section>
-    </main>
-  )
-}
+export default IndexPage;

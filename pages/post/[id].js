@@ -1,48 +1,43 @@
-import Link from 'next/link'
-import Head from 'next/head'
+import axios from "axios";
+import Post from "../../components/Post";
 
-export async function getStaticPaths() {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts?_page=1'
-  )
-  const postList = await response.json()
+export const getStaticPaths = async () => {
+  let posts = [];
+  try {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts?_page=1"
+    );
+    posts = response.data;
+  } catch (e) {}
+
   return {
-    paths: postList.map((post) => {
-      return {
-        params: {
-          id: `${post.id}`,
-        },
-      }
-    }),
+    paths: posts.map((post) => ({
+      params: {
+        id: `${post.id}`,
+      },
+    })),
     fallback: false,
-  }
-}
+  };
+};
 
-export async function getStaticProps({ params }) {
-  // fetch single post detail
-  const response = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${params.id}`
-  )
-  const post = await response.json()
+export const getStaticProps = async ({ params }) => {
+  let post = {};
+  let error = "";
+  try {
+    const response = await axios.get(
+      `https://jsonplaceholder.typicode.com/posts/${params.id}`
+    );
+    post = response.data;
+  } catch (err) {
+    error = err.toString();
+  }
+
   return {
-    props: post,
-  }
-}
+    props: {
+      ...post,
+      error,
+    },
+  };
+};
 
-export default function Post({ title, body }) {
-  return (
-    <main>
-      <Head>
-        <title>{title}</title>
-      </Head>
-
-      <h1>{title}</h1>
-
-      <p>{body}</p>
-
-      <Link href="/">
-        <a>Go back to home</a>
-      </Link>
-    </main>
-  )
-}
+export default Post;
