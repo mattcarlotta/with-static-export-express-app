@@ -1,5 +1,5 @@
 import axios from "axios";
-import Post from "../../components/Post";
+export { Post as default } from "../../components/Post";
 
 export const getStaticPaths = async () => {
   let posts = [];
@@ -39,5 +39,3 @@ export const getStaticProps = async ({ params }) => {
     },
   };
 };
-
-export default Post;
